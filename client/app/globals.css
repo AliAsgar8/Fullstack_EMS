@@ -2,25 +2,71 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0f172a;
+  --brand: #0b1f3a;
+  --brand-hover: #163356;
+  --surface: #f8fafc;
+  --surface-hover: #f1f5f9;
+  --border: #e2e8f0;
+  --border-hover: #94a3b8;
+  --danger: #ef4444;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
+  --color-danger: var(--danger);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Shared UI classes — reuse these instead of repeating the same colors */
+.btn-primary {
+  @apply w-full rounded-md bg-brand px-4 py-2.5 text-sm font-medium text-white
+    hover:bg-brand-hover
+    disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+.btn-secondary {
+  @apply rounded-md border border-border bg-white px-5 py-2.5 text-sm text-slate-700
+    hover:border-border-hover hover:bg-surface;
+}
+
+.input-field {
+  @apply w-full rounded-md border border-border bg-white px-4 py-2.5 text-sm
+    text-slate-900 placeholder:text-slate-400
+    focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/10;
+}
+
+.label-field {
+  @apply mb-1.5 block text-sm font-medium text-slate-700;
+}
+
+.auth-card {
+  @apply w-full max-w-md;
+}
+
+.page-title {
+  @apply text-3xl font-medium tracking-tight text-slate-900;
+}
+
+.page-subtitle {
+  @apply text-slate-500;
+}
+
+.portal-card {
+  @apply block rounded-lg border border-border bg-surface px-4 py-4
+    hover:border-border-hover hover:bg-surface-hover;
 }
