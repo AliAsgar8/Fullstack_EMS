@@ -1,19 +1,22 @@
 import React from "react";
 import { ShieldIcon } from "lucide-react";
+import Link from "next/link";
 
 const Login = () => {
 
   const portalOptions = [
     {
-      to: "/login/admin",
-      title: "Admin Portal",
-      description: "Manage employees, departments, payroll, and system configurations.",
+      to: "/login/employee",
+      label: "Employee",
+      title: "Employee Portal",
+      description: "View your payroll, attendance, and personal information.",
       icon: <ShieldIcon />,
     },
     {
-      to: "/login/employee",
-      title: "Employee Portal",
-      description: "View your payroll, attendance, and personal information.",
+      to: "/login/admin",
+      label: "Admin",
+      title: "Admin Portal",
+      description: "Manage employees, departments, payroll, and system configurations.",
       icon: <ShieldIcon />,
     },
   ]
@@ -24,8 +27,11 @@ const Login = () => {
         <p className="text-slate-500">Select your portal to securely access the system.</p>
       </div>
       <div>
-        <button>Employee</button>
-        <button>Admin</button>
+        {portalOptions.map((option) => (
+          <Link key={option.to} href={option.to}>
+            {option.label}
+          </Link>
+        ))}
       </div>
       <div>
 
