@@ -1,7 +1,5 @@
-import React from "react";
+import LoginForm from "@/components/layout/LoginForm";
 
-const AdminLogin = () => {
-  return <div>Admin Login</div>;
-};
-
-export default AdminLogin;
+export default function AdminLogin() {
+  return <LoginForm role="admin" />;
+}

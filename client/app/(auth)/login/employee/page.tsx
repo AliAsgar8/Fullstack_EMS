@@ -1,7 +1,5 @@
-import React from "react";
+import LoginForm from "@/components/layout/LoginForm";
 
-const EmployeeLogin = () => {
-  return <div>Employee Login</div>;
-};
-
-export default EmployeeLogin;
+export default function EmployeeLogin() {
+  return <LoginForm role="employee" />;
+}

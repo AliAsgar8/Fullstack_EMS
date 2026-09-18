@@ -28,9 +28,9 @@ export default function Sidebar({ role }: SidebarProps) {
   const links = role === "admin" ? adminLinks : employeeLinks;
 
   return (
-    <aside className="flex min-h-screen w-64 flex-col bg-slate-900 text-white">
-      <div className="border-b border-slate-700 px-5 py-6">
-        <p className="text-sm font-semibold tracking-wide uppercase text-slate-300">
+    <aside className="flex min-h-screen w-64 flex-col bg-brand text-white">
+      <div className="border-b border-white/10 px-5 py-6">
+        <p className="text-sm font-semibold tracking-wide text-slate-300 uppercase">
           EMS
         </p>
         <h1 className="mt-1 text-lg font-semibold capitalize">{role} Portal</h1>
@@ -47,8 +47,8 @@ export default function Sidebar({ role }: SidebarProps) {
               href={link.href}
               className={`rounded-md px-3 py-2 text-sm transition-colors ${
                 isActive
-                  ? "bg-slate-700 text-white"
-                  : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                  ? "bg-white/15 text-white"
+                  : "text-slate-300 hover:bg-white/10 hover:text-white"
               }`}
             >
               {link.label}
