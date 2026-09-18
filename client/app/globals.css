@@ -5,6 +5,8 @@
   --foreground: #0f172a;
   --brand: #0b1f3a;
   --brand-hover: #163356;
+  --sidebar: #0b1f3a;
+  --sidebar-accent: #6366f1;
   --surface: #f8fafc;
   --surface-hover: #f1f5f9;
   --border: #e2e8f0;
@@ -17,6 +19,8 @@
   --color-foreground: var(--foreground);
   --color-brand: var(--brand);
   --color-brand-hover: var(--brand-hover);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-accent: var(--sidebar-accent);
   --color-surface: var(--surface);
   --color-surface-hover: var(--surface-hover);
   --color-border: var(--border);
