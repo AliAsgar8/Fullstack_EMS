@@ -1,3 +1,5 @@
+import jwt from "jsonwebtoken";
+
 export const protect = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -13,14 +15,15 @@ export const protect = async (req, res, next) => {
     req.session = session;
     next();
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(401).json({ message: "Unauthorized" });
   }
 };
 
-
 export const isAdmin = async (req, res, next) => {
-  if(req.session.user.role !== "admin"){
-    return res.status(401).json({ message: "You are not authorized to access this resource" });
+  if (req.session.role !== "admin") {
+    return res
+      .status(401)
+      .json({ message: "You are not authorized to access this resource" });
   }
   next();
 };

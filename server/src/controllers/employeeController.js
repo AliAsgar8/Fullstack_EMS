@@ -1,6 +1,7 @@
+import bcrypt from "bcrypt";
 import { eq, and } from "drizzle-orm";
 import db from "../db/db.js";
-import { employees } from "../db/schema.js";
+import { employees, users } from "../db/schema.js";
 import { DEPARTMENTS } from "../../constants/departments.js";
 
 // GET /api/employees
@@ -94,7 +95,35 @@ export async function createEmployee(req, res) {
       });
     }
 
+    // Link login user → employee (create user if needed)
+    let userId = req.body.userId ? Number(req.body.userId) : null;
+
+    if (!userId) {
+      const [existingUser] = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, email));
+
+      if (existingUser) {
+        userId = existingUser.id;
+      } else {
+        const tempPassword = req.body.password || "password123";
+        const hashedPassword = await bcrypt.hash(tempPassword, 10);
+        await db.insert(users).values({
+          email,
+          password: hashedPassword,
+          role: "employee",
+        });
+        const [newUser] = await db
+          .select()
+          .from(users)
+          .where(eq(users.email, email));
+        userId = newUser.id;
+      }
+    }
+
     await db.insert(employees).values({
+      userId,
       firstName,
       lastName,
       email,
@@ -112,6 +141,7 @@ export async function createEmployee(req, res) {
     res.status(201).json({
       success: true,
       message: "Employee created successfully",
+      userId,
     });
   } catch (error) {
     res.status(500).json({
