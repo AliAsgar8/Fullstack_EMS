@@ -1,6 +1,7 @@
 import { eq, and, isNull, desc } from "drizzle-orm";
 import db from "../db/db.js";
 import { employees, attendance } from "../db/schema.js";
+import { inngest } from "../../inngest/index.js";
 
 function todayDateString() {
   return new Date().toISOString().slice(0, 10);
@@ -85,17 +86,32 @@ export const clockInOut = async (req, res) => {
     }
 
     // Clock IN
-    await db.insert(attendance).values({
-      employeeId: employee.id,
-      date: today,
-      checkIn: new Date(),
-      status: "present",
-    });
+    const [created] = await db
+      .insert(attendance)
+      .values({
+        employeeId: employee.id,
+        date: today,
+        checkIn: new Date(),
+        status: "present",
+      })
+      .$returningId();
+
+    // Start auto check-out reminder workflow
+    if (created?.id) {
+      await inngest.send({
+        name: "employee/auto-checkout",
+        data: {
+          employeeId: employee.id,
+          attendanceId: created.id,
+        },
+      });
+    }
 
     return res.status(201).json({
       success: true,
       action: "clock-in",
       message: "Clocked in successfully",
+      attendanceId: created?.id,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -1,6 +1,7 @@
 import { eq, and, desc } from "drizzle-orm";
 import db from "../db/db.js";
 import { employees, leaves } from "../db/schema.js";
+import { inngest } from "../../inngest/index.js";
 
 const LEAVE_TYPES = ["SICK", "CASUAL", "ANNUAL"];
 const LEAVE_STATUSES = ["PENDING", "APPROVED", "REJECTED"];
@@ -50,18 +51,30 @@ export async function createLeave(req, res) {
       });
     }
 
-    await db.insert(leaves).values({
-      employeeId: employee.id,
-      type,
-      startDate,
-      endDate,
-      reason,
-      status: "PENDING",
-    });
+    const [created] = await db
+      .insert(leaves)
+      .values({
+        employeeId: employee.id,
+        type,
+        startDate,
+        endDate,
+        reason,
+        status: "PENDING",
+      })
+      .$returningId();
+
+    // Start 24h admin reminder if leave stays PENDING
+    if (created?.id) {
+      await inngest.send({
+        name: "leave/pending",
+        data: { leaveApplicationId: created.id },
+      });
+    }
 
     return res.status(201).json({
       success: true,
       message: "Leave created successfully",
+      leaveId: created?.id,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
